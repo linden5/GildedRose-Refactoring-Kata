@@ -123,4 +123,25 @@ describe("Gilded Rose", function() {
     expect(items[0].sellIn).toBe(-1);
     expect(items[0].quality).toBe(0);
   });
+
+  it("should decrease quality of conjured item by 2", function() {
+    const gildedRose = new Shop([new Item(ITEM_NAME.CONJURED, 20, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toBe(19);
+    expect(items[0].quality).toBe(18);
+  });
+
+  it("should decrease quality of conjured item by 4 if passed sell day", function() {
+    const gildedRose = new Shop([new Item(ITEM_NAME.CONJURED, 0, 20)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[0].quality).toBe(16);
+  });
+
+  it("should decrease quality of conjured item but not below 0", function() {
+    const gildedRose = new Shop([new Item(ITEM_NAME.CONJURED, 0, 1)]);
+    const items = gildedRose.updateQuality();
+    expect(items[0].sellIn).toBe(-1);
+    expect(items[0].quality).toBe(0);
+  });
 });

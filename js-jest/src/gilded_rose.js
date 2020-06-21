@@ -58,11 +58,11 @@ class Shop {
     }
   }
 
-  updateNormalItem (item) {
-    this.updateQualityValue(item, -1);
+  updateNormalItem (item, value) {
+    this.updateQualityValue(item, value);
     this.updateSellIn(item);
     if (item.sellIn < 0) {
-      this.updateQualityValue(item, -1);
+      this.updateQualityValue(item, value);
     }
   }
 
@@ -71,6 +71,8 @@ class Shop {
       this.updateBackstagePasses(item);
     } else if (item.name === ITEM_NAME.AGED_BRIE) {
       this.updateAgedBrie(item);
+    } else if (item.name === ITEM_NAME.CONJURED) {
+      this.updateNormalItem(item, -2);
     } else if (item.name !== ITEM_NAME.SULFURAS) {
       this.updateNormalItem(item, -1);
     }
