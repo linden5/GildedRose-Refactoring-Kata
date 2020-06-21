@@ -19,9 +19,7 @@ class Shop {
   }
 
   updateSellIn(item) {
-    if (item.name != ITEM_NAME.SULFURAS) {
-      item.sellIn = item.sellIn - 1;
-    }
+    item.sellIn = item.sellIn - 1;
   }
 
   updateAgedBrie (item) {
@@ -46,12 +44,6 @@ class Shop {
     this.updateQualityValue(item, -item.quality);
   }
 
-  handleSellDayPassedNormal (item) {
-    if (item.name != ITEM_NAME.SULFURAS) {
-      this.updateQualityValue(item, -1);
-    }
-  }
-
   updateQualityValue (item, value) {
     if (value !== 0) {
       let newValue = item.quality + value;
@@ -66,27 +58,25 @@ class Shop {
   }
 
   updateQualityByName (item) {
-    if (item.name != ITEM_NAME.AGED_BRIE && item.name != ITEM_NAME.BACKSTAGE_PASSES) {
-      if (item.name != ITEM_NAME.SULFURAS) {
-        this.updateQualityValue(item, -1);
-      }
-    } else {  
-      if (item.name == ITEM_NAME.BACKSTAGE_PASSES) {
-        this.updateBackstagePasses(item);
-      } else {
-        this.updateAgedBrie(item);
-      }
+    if (item.name == ITEM_NAME.BACKSTAGE_PASSES) {
+      this.updateBackstagePasses(item);
+    } else if (item.name === ITEM_NAME.AGED_BRIE) {
+      this.updateAgedBrie(item);
+    } else if (item.name !== ITEM_NAME.SULFURAS) {
+      this.updateQualityValue(item, -1);
     }
     
-    this.updateSellIn(item)
+    if (item.name != ITEM_NAME.SULFURAS) {
+      this.updateSellIn(item);
+    }
 
     if (item.sellIn < 0) {
       if (item.name === ITEM_NAME.AGED_BRIE) {
         this.handleSellDayPassedAgedBrie(item);
       } else if (item.name === ITEM_NAME.BACKSTAGE_PASSES) {
         this.handleSellDayPassedBackStagePasses(item);
-      } else {
-        this.handleSellDayPassedNormal(item);
+      } else if (item.name !== ITEM_NAME.SULFURAS) {
+        this.updateQualityValue(item, -1);
       }
     }
   }
