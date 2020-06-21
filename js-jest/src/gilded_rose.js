@@ -18,69 +18,74 @@ class Shop {
     this.items = items;
   }
 
-  updateSellIn(i) {
-    if (this.items[i].name != ITEM_NAME.SULFURAS) {
-      this.items[i].sellIn = this.items[i].sellIn - 1;
+  updateSellIn(item) {
+    if (item.name != ITEM_NAME.SULFURAS) {
+      item.sellIn = item.sellIn - 1;
     }
   }
 
-  increaseQuality (i) {
-    this.items[i].quality = this.items[i].quality + 1;
-    if (this.items[i].name == ITEM_NAME.BACKSTAGE_PASSES) {
-      if (this.items[i].sellIn < 11) {
-        if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1;
+  increaseQuality (item) {
+    item.quality = item.quality + 1;
+    if (item.name == ITEM_NAME.BACKSTAGE_PASSES) {
+      if (item.sellIn < 11) {
+        if (item.quality < 50) {
+          item.quality = item.quality + 1;
         }
       }
-      if (this.items[i].sellIn < 6) {
-        if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1;
+      if (item.sellIn < 6) {
+        if (item.quality < 50) {
+          item.quality = item.quality + 1;
         }
       }
     }
   }
 
-  decreaseQuality (i) {
-    if (this.items[i].quality > 0) {
-      if (this.items[i].name != ITEM_NAME.SULFURAS) {
-        this.items[i].quality = this.items[i].quality - 1;
+  decreaseQuality (item) {
+    if (item.quality > 0) {
+      if (item.name != ITEM_NAME.SULFURAS) {
+        item.quality = item.quality - 1;
       }
     }
   }
 
-  handleSellDayPassed (i) {
-    if (this.items[i].name != ITEM_NAME.AGED_BRIE) {
-      if (this.items[i].name != ITEM_NAME.BACKSTAGE_PASSES) {
-        if (this.items[i].quality > 0) {
-          if (this.items[i].name != ITEM_NAME.SULFURAS) {
-            this.items[i].quality = this.items[i].quality - 1;
+  handleSellDayPassed (item) {
+    if (item.name != ITEM_NAME.AGED_BRIE) {
+      if (item.name != ITEM_NAME.BACKSTAGE_PASSES) {
+        if (item.quality > 0) {
+          if (item.name != ITEM_NAME.SULFURAS) {
+            item.quality = item.quality - 1;
           }
         }
       } else {
-        this.items[i].quality = this.items[i].quality - this.items[i].quality;
+        item.quality = item.quality - item.quality;
       }
     } else {
-      if (this.items[i].quality < 50) {
-        this.items[i].quality = this.items[i].quality + 1;
+      if (item.quality < 50) {
+        item.quality = item.quality + 1;
       }
+    }
+  }
+
+  updateQualityByName (item) {
+    if (item.name != ITEM_NAME.AGED_BRIE && item.name != ITEM_NAME.BACKSTAGE_PASSES) {
+      this.decreaseQuality(item)
+    } else {
+      if (item.quality < 50) {
+        this.increaseQuality(item)
+      }
+    }
+    
+    this.updateSellIn(item)
+
+    if (item.sellIn < 0) {
+      this.handleSellDayPassed(item)
     }
   }
 
   updateQuality() {
     for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].name != ITEM_NAME.AGED_BRIE && this.items[i].name != ITEM_NAME.BACKSTAGE_PASSES) {
-        this.decreaseQuality(i)
-      } else {
-        if (this.items[i].quality < 50) {
-          this.increaseQuality(i)
-        }
-      }
-      
-      this.updateSellIn(i)
-
-      if (this.items[i].sellIn < 0) {
-        this.handleSellDayPassed(i)
-      }
+      const item = this.items[i]
+      this.updateQualityByName(item)
     }
 
     return this.items;
