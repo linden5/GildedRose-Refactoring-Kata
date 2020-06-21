@@ -25,14 +25,24 @@ class Shop {
   }
 
   increaseQuality (item) {
-    this.updateQualityValue(item, 1);
     if (item.name == ITEM_NAME.BACKSTAGE_PASSES) {
-      if (item.sellIn < 11) {
-        this.updateQualityValue(item, 1);
-      }
-      if (item.sellIn < 6) {
-        this.updateQualityValue(item, 1);
-      }
+      this.updateBackstagePasses(item);
+    } else {
+      this.updateAgedBrie(item);
+    }
+  }
+
+  updateAgedBrie (item) {
+    this.updateQualityValue(item, 1);
+  }
+
+  updateBackstagePasses (item) {
+    this.updateQualityValue(item, 1);
+    if (item.sellIn < 11) {
+      this.updateQualityValue(item, 1);
+    }
+    if (item.sellIn < 6) {
+      this.updateQualityValue(item, 1);
     }
   }
 
@@ -44,17 +54,27 @@ class Shop {
 
   handleSellDayPassed (item) {
     if (item.sellIn < 0) {
-      if (item.name != ITEM_NAME.AGED_BRIE) {
-        if (item.name != ITEM_NAME.BACKSTAGE_PASSES) {
-          if (item.name != ITEM_NAME.SULFURAS) {
-            this.updateQualityValue(item, -1);
-          }
-        } else {
-          this.updateQualityValue(item, -item.quality);
-        }
+      if (item.name === ITEM_NAME.AGED_BRIE) {
+        this.handleSellDayPassedAgedBrie(item);
+      } else if (item.name === ITEM_NAME.BACKSTAGE_PASSES) {
+        this.handleSellDayPassedBackStagePasses(item);
       } else {
-        this.updateQualityValue(item, 1);
+        this.handleSellDayPassedNormal(item);
       }
+    }
+  }
+
+  handleSellDayPassedAgedBrie (item) {
+    this.updateQualityValue(item, 1);
+  }
+
+  handleSellDayPassedBackStagePasses (item) {
+    this.updateQualityValue(item, -item.quality);
+  }
+
+  handleSellDayPassedNormal (item) {
+    if (item.name != ITEM_NAME.SULFURAS) {
+      this.updateQualityValue(item, -1);
     }
   }
 
