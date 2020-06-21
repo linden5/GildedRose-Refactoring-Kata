@@ -70,6 +70,23 @@ class Shop {
     }
   }
 
+  // updateQualityValue (item, value) {
+  //   if (value !== 0) {
+  //     const newValue = item.quality + value;
+  //     if (newValue > 50) {
+  //       newValue = 50;
+  //     } else if (newValue < 0) {
+  //       newValue = 0;
+  //     }
+
+  //     item.quality = newValue;
+  //   }
+  // }
+
+  // updateQualityOfSulfuras () {
+
+  // }
+
   updateQualityByName (item) {
     if (item.name != ITEM_NAME.AGED_BRIE && item.name != ITEM_NAME.BACKSTAGE_PASSES) {
       this.decreaseQuality(item)
