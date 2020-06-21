@@ -67,15 +67,15 @@ class Shop {
   }
 
   updateQualityByName (item) {
-    if (item.name == ITEM_NAME.BACKSTAGE_PASSES) {
-      this.updateBackstagePasses(item);
-    } else if (item.name === ITEM_NAME.AGED_BRIE) {
-      this.updateAgedBrie(item);
-    } else if (item.name === ITEM_NAME.CONJURED) {
-      this.updateNormalItem(item, -2);
-    } else if (item.name !== ITEM_NAME.SULFURAS) {
-      this.updateNormalItem(item, -1);
+    const strategy = {
+      [ITEM_NAME.BACKSTAGE_PASSES]: item => this.updateBackstagePasses(item),
+      [ITEM_NAME.AGED_BRIE]: item => this.updateAgedBrie(item),
+      [ITEM_NAME.CONJURED]: item => this.updateNormalItem(item, -2),
+      [ITEM_NAME.SULFURAS]: () => {},
+      default: item => this.updateNormalItem(item, -1)
     }
+    const handler = strategy[item.name] || strategy.default
+    handler(item)
   }
 
   updateQuality() {
