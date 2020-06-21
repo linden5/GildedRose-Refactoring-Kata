@@ -22,8 +22,24 @@ class Shop {
     item.sellIn = item.sellIn - 1;
   }
 
+  updateQualityValue (item, value) {
+    let newValue = item.quality + value;
+    if (newValue > 50) {
+      newValue = 50;
+    } else if (newValue < 0) {
+      newValue = 0;
+    }
+
+    item.quality = newValue;
+  }
+
   updateAgedBrie (item) {
     this.updateQualityValue(item, 1);
+    this.updateSellIn(item);
+
+    if (item.sellIn < 0) {
+      this.updateQualityValue(item, 1);
+    }
   }
 
   updateBackstagePasses (item) {
@@ -34,26 +50,19 @@ class Shop {
     if (item.sellIn < 6) {
       this.updateQualityValue(item, 1);
     }
+
+    this.updateSellIn(item);
+
+    if (item.sellIn < 0) {
+      this.updateQualityValue(item, -item.quality);
+    }
   }
 
-  handleSellDayPassedAgedBrie (item) {
-    this.updateQualityValue(item, 1);
-  }
-
-  handleSellDayPassedBackStagePasses (item) {
-    this.updateQualityValue(item, -item.quality);
-  }
-
-  updateQualityValue (item, value) {
-    if (value !== 0) {
-      let newValue = item.quality + value;
-      if (newValue > 50) {
-        newValue = 50;
-      } else if (newValue < 0) {
-        newValue = 0;
-      }
-
-      item.quality = newValue;
+  updateNormalItem (item) {
+    this.updateQualityValue(item, -1);
+    this.updateSellIn(item);
+    if (item.sellIn < 0) {
+      this.updateQualityValue(item, -1);
     }
   }
 
@@ -63,21 +72,7 @@ class Shop {
     } else if (item.name === ITEM_NAME.AGED_BRIE) {
       this.updateAgedBrie(item);
     } else if (item.name !== ITEM_NAME.SULFURAS) {
-      this.updateQualityValue(item, -1);
-    }
-    
-    if (item.name != ITEM_NAME.SULFURAS) {
-      this.updateSellIn(item);
-    }
-
-    if (item.sellIn < 0) {
-      if (item.name === ITEM_NAME.AGED_BRIE) {
-        this.handleSellDayPassedAgedBrie(item);
-      } else if (item.name === ITEM_NAME.BACKSTAGE_PASSES) {
-        this.handleSellDayPassedBackStagePasses(item);
-      } else if (item.name !== ITEM_NAME.SULFURAS) {
-        this.updateQualityValue(item, -1);
-      }
+      this.updateNormalItem(item, -1);
     }
   }
 
